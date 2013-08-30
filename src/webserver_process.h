@@ -6,6 +6,8 @@
 #include "http_response.h"
 #include "sockets.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 void webserver_process_request(HttpRequest*     request,
                                ClientSocket*    client,

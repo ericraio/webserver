@@ -33,14 +33,37 @@ void webserver_process_get(HttpRequest* request, ClientSocket* client)
   // Append request URI to FILE_STORAGE_ROOT
   // If file exists, return it with 200 / OK
   // Else file is missing so return 404 / Not Found
+  
 
-  const char* body = 
-    "<html>"
-    "<head></head>"
-    "<body><p>Hello World!</p></body>"
-    "</html>\n";
+  // TODO: 
+  // - Refactor file handling into another file
+  FILE    *file;
+  char    *buffer;
+  long    numbytes;
 
-  webserver_send_response(client, HTTP_STATUS_OK, body, "text/html");
+  file = fopen("public/index.html", "r");
+
+  if (file != NULL) {
+    fseek(file, 0L, SEEK_END);
+    numbytes = ftell(file);
+    fseek(file, 0L, SEEK_SET);
+
+    buffer = (char *)calloc(numbytes, sizeof(char));
+    
+    if (buffer != NULL) {
+      fread(buffer, sizeof(char), numbytes, file);
+      const char* buff = buffer;
+
+      webserver_send_response(client, HTTP_STATUS_OK, buff, "text/html");
+
+      fclose(file);
+      free(buffer);
+    }
+  } else {
+    const char* body = "<html><body>Not Found!</body></html>";
+    webserver_send_response(client, HTTP_STATUS_NOT_FOUND, body, "text/html");
+  }
+
 }
 
 void webserver_process_head(HttpRequest* request, ClientSocket* client)
