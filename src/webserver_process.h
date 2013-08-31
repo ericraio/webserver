@@ -26,4 +26,7 @@ void webserver_send_response(ClientSocket*    client,
                              const char*      body,
                              const char*      content_type);
 
+void webserver_send_internal_server_error(ClientSocket* client);
+void webserver_send_not_found            (ClientSocket* client);
+
 #endif

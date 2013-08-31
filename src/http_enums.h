@@ -48,12 +48,13 @@ enum EHttpStatus {
   HTTP_STATUS_BAD_REQUEST = 400,
   HTTP_STATUS_NOT_FOUND = 404,
   HTTP_STATUS_NOT_IMPLEMENTED = 501,
+  HTTP_STATUS_INTERNAL_SERVER_ERROR = 500,
   // TODO - etc
   HTTP_STATUS_UNKNOWN
 };
 
 // String conversion
-const char*       http_status_to_string  (enum EHttpStatus x);
+const char*      http_status_to_string  (enum EHttpStatus x);
 enum EHttpStatus http_status_from_string(const char* s);
 
 #endif // HTTP_ENUMS_H

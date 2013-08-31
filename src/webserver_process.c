@@ -33,7 +33,6 @@ void webserver_process_get(HttpRequest* request, ClientSocket* client)
   // Append request URI to FILE_STORAGE_ROOT
   // If file exists, return it with 200 / OK
   // Else file is missing so return 404 / Not Found
-  
 
   // TODO: 
   // - Refactor file handling into another file
@@ -55,13 +54,14 @@ void webserver_process_get(HttpRequest* request, ClientSocket* client)
       const char* buff = buffer;
 
       webserver_send_response(client, HTTP_STATUS_OK, buff, "text/html");
-
-      fclose(file);
-      free(buffer);
+    } else {
+      webserver_send_internal_server_error(client);
     }
+
+    fclose(file);
+    free(buffer);
   } else {
-    const char* body = "<html><body>Not Found!</body></html>";
-    webserver_send_response(client, HTTP_STATUS_NOT_FOUND, body, "text/html");
+    webserver_send_not_found(client);
   }
 
 }
@@ -107,6 +107,7 @@ void webserver_echo_request(HttpRequest* request, ClientSocket* client)
   webserver_send_response(client, HTTP_STATUS_OK, client->data, 0);
 }
 
+
 void webserver_send_response(ClientSocket*    client,
                              enum EHttpStatus status,
                              const char*      body,
@@ -128,4 +129,17 @@ void webserver_send_response(ClientSocket*    client,
   // Send the response and clean up
   client_socket_send(client, http_response_string(res), http_response_length(res));
   http_response_free(res);
+}
+
+
+void webserver_send_internal_server_error(ClientSocket* client)
+{
+  const char* body = "<html><body>Internal Server Error!</body></html>";
+  webserver_send_response(client, HTTP_STATUS_INTERNAL_SERVER_ERROR, body, "text/html");
+}
+
+void webserver_send_not_found(ClientSocket* client)
+{
+  const char* body = "<html><body>Not Found!</body></html>";
+  webserver_send_response(client, HTTP_STATUS_NOT_FOUND, body, "text/html");
 }

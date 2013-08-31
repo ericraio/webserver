@@ -36,7 +36,7 @@ typedef struct HttpRequest {
   char*             uri;          // URI of resource
   size_t            num_headers;  // Number of headers
   size_t            header_cap;   // Header array capacity
-  HttpHeader*       headers;       // Array of headers
+  HttpHeader*       headers;      // Array of headers
   char*             body;         // Request body
   char*             error;        // Error message set by some functions
 } HttpRequest;
